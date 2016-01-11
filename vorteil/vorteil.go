@@ -13,13 +13,14 @@ import (
 )
 
 type Vorteil struct {
-	config configuration
-	cookie *securecookie.SecureCookie
-	users  *privileges.Privileges
-	http   *multiserver.HTTPServer
-	start  func() error
-	stop   func()
-	log    log15.Logger
+	config  configuration
+	cookie  *securecookie.SecureCookie
+	storage Storage
+	users   *privileges.Privileges
+	http    *multiserver.HTTPServer
+	start   func() error
+	stop    func()
+	log     log15.Logger
 }
 
 func New(target string) (*Vorteil, error) {
@@ -45,6 +46,11 @@ func (v *Vorteil) setup() error {
 
 	v.cookie = securecookie.New(securecookie.GenerateRandomKey(64), securecookie.GenerateRandomKey(32))
 	v.users, err = privileges.New(v.config.Data + "/vorteil.db")
+	if err != nil {
+		return err
+	}
+
+	v.storage, err = initStorage(&v.config.Storage)
 	if err != nil {
 		return err
 	}

@@ -15,15 +15,16 @@ type serviceHandler struct {
 func (sh serviceHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	// default login
-	key, err := sh.vorteil.users.Login("guest", "")
+	session, err := sh.vorteil.users.Login("guest", "")
 	if err != nil {
 		w.Write(ErrInternal.Response(""))
 		return
 	}
+	defer session.Logout()
 
 	// default access to webpages
 	if !strings.HasPrefix(r.URL.Path, "/services/admin") && !strings.HasPrefix(r.URL.Path, "/services/images") {
-		sh.handle(key, w, r)
+		sh.handle(session, w, r)
 		return
 	}
 
@@ -34,11 +35,12 @@ func (sh serviceHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		if err == nil {
 			username := value["username"]
 			password := value["password"]
-			key, err := sh.vorteil.users.Login(username, password)
+			session, err := sh.vorteil.users.Login(username, password)
 			if err == nil {
-				sh.handle(key, w, r)
+				sh.handle(session, w, r)
 				return
 			}
+			session.Logout()
 		}
 	}
 

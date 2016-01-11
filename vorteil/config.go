@@ -7,15 +7,12 @@ import (
 )
 
 type configuration struct {
-	Mode      string        `yaml:"mode"`
-	Data      string        `yaml:"data"`
-	Bind      string        `yaml:"bind"`
-	Advertise string        `yaml:"advertise"`
-	Storage   storageConfig `yaml:"storage"`
-	Raft      raftConfig    `yaml:"raft"`
-}
-
-type storageConfig struct {
+	Mode      string               `yaml:"mode"`
+	Data      string               `yaml:"data"`
+	Bind      string               `yaml:"bind"`
+	Advertise string               `yaml:"advertise"`
+	Storage   storageConfiguration `yaml:"storage"`
+	Raft      raftConfig           `yaml:"raft"`
 }
 
 type raftConfig struct {
