@@ -1,6 +1,0 @@
-mode: standalone 		# standalone | raft
-data: ./data 	 		# location for vorteil's persistent data storage
-bind: 127.0.0.1:8000    	# address and port to serve http requests on
-advertise: 127.0.0.1:8000 	# externally usable address and port
-storage:
-  mode: local			# local | amazonS3
